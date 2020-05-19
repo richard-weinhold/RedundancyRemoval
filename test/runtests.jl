@@ -43,6 +43,16 @@ end
 		@test length(setdiff(essential_set, nonredundant_indices)) == 0
 	end
 
+	@testset "RedundancyRemoval Parallel, Filter, witout x_bounds" begin
+
+		A, b, x_bounds, nonredundant_indices = dummy_data()
+		optimizer = Clp.Optimizer
+		x_bounds = Array{Float64, 1}()
+		essential_set = RedundancyRemoval.run_redundancy_removal(A, b, x_bounds,
+																 optimizer, parallel=true, filter_only=true)
+		@test length(setdiff(essential_set, nonredundant_indices)) == 0
+	end
+
 	@testset "RedundancyRemoval Parallel, Filter=false" begin
 		A, b, x_bounds, nonredundant_indices = dummy_data()
 		optimizer = Clp.Optimizer
