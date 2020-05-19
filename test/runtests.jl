@@ -83,7 +83,7 @@ end
 	end
 
 	@testset "Run IEEE from file" begin
-		dir = pwd()*"/examples/"
+		dir = cd(pwd, "..")*"/examples/"
 		file_suffix = "ieee118"
 		optimizer = Clp.Optimizer
 		file = RedundancyRemoval.run_redundancy_removal(dir, file_suffix, optimizer, parallel=false)
