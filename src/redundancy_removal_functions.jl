@@ -7,29 +7,67 @@
 # 	return with_optimizer(Clp.Optimizer, LogLevel=0)
 # end
 
-function return_optimizer()
-	@info("Using Gurobi optimizer")
-	return with_optimizer(Gurobi.Optimizer, OutputFlag=0, Method=0,
-						  Presolve=0, PreDual=0, Aggregate=0)
-	# return with_optimizer(Clp.Optimizer, LogLevel=0)
+# function set_global_optimizer(optimizer)
+# 	global optimizer = optimizer
+# end
+
+# function return_optimizer()
+# 	global optimizer
+# 	if optimizer == "gurobi"
+# 		@info("Using Gurobi optimizer")
+# 		return with_optimizer(Gurobi.Optimizer, OutputFlag=0, Method=0,
+# 							  Presolve=0, PreDual=0, Aggregate=0)
+# 	elseif optimizer == "Clp"
+# 		return with_optimizer(Clp.Optimizer, LogLevel=0)
+# 	else
+
 	# return with_optimizer(ECOS.Optimizer, VERBOSE=false)
+# end
+
+function return_optimizer()
+	global optimizer
+	if string(optimizer.name) == "Gurobi.Optimizer"
+		return optimizer_with_attributes(optimizer, "OutputFlag" => 0,
+										 "Method" => 0, "Presolve" => 0,
+										 "PreDual" => 0, "Aggregate" => 0)
+	# elseif string(optimizer.name) == "Clp.Optimizer"
+	# 	return optimizer_with_attributes(optimizer, "Algorithm" => 4, "LogLevel" => 0)
+	else
+		return optimizer
+	end
 end
+
 
 function is_redundant(model::JuMP.Model, constraint::Vector{Float64}, rhs::Float64)
 	tmp_constraint = @constraint(model, constraint' * model[:x] <= rhs + 1)
 	@objective(model, Max, constraint' * model[:x])
 	JuMP.optimize!(model)
-
+	# counter = 0
+	# while true
+	# 	JuMP.optimize!(model)
+	# 	if JuMP.termination_status(model) == MOI.OPTIMAL
+	# 		break
+	# 	elseif counter > 3
+	# 		@error("Model Infeasible! This should not be possible!")
+	# 	else
+	# 		counter += 1
+	# 	end
+	# end
 	@debug("Solution", JuMP.value.(model[:x]))
 	@debug("Obj Value", JuMP.objective_value(model))
-
-	objective_value = JuMP.objective_value(model)
-	x_opt = JuMP.value.(model[:x])
-	JuMP.delete(model, tmp_constraint)
-	if objective_value > rhs
-		return true, x_opt, model
+	@debug("Number of constraints $(num_constraints(model, GenericAffExpr{Float64,VariableRef}, MOI.LessThan{Float64}))")
+	if JuMP.termination_status(model) == MOI.OPTIMAL
+		objective_value = JuMP.objective_value(model)
+		x_opt = JuMP.value.(model[:x])
+		JuMP.delete(model, tmp_constraint)
+		if objective_value > rhs
+			return true, x_opt, model
+		else
+			return false, x_opt, model
+		end
 	else
-		return false, x_opt, model
+		JuMP.delete(model, tmp_constraint)
+		return false, [], model
 	end
 end
 
@@ -49,7 +87,7 @@ function build_model(dim::Int, A::Array{Float64},
 	end
 
 	@constraint(model, con[i=1:size(A, 1)], A[i,:]' * x <= b[i])
-	@constraint(model, sum(x[i] for i in 1:dim) == 0)
+	# @constraint(model, sum(x[i] for i in 1:dim) == 0)
 	return model
 end
 
@@ -203,6 +241,8 @@ function solve_parallel(model::JuMP.Model, A::Array{Float64}, b::Vector{Float64}
 						filtered_m::Vector{Int}, x_bounds::Vector{Float64},
 					   	r::Vector{Int})
 	JuMP.set_optimizer(model, return_optimizer())
+	MOI.set(model, MOI.Silent(), true)
+
 	indices = zeros(Bool, length(r))
 	@info("Start wit LPTest on proc: $(Threads.threadid())")
 	for k in 1:length(r)

@@ -12,7 +12,7 @@ function set_logger(wdir::String)
 	end
 end
 
-function save_to_file(Indices, filename::String)
+function save_to_file(wdir::String, Indices::Vector{Int}, filename::String)
 	# I_result.-1: Indices start at 0 (in python.... or any other decent programming language)
 	@info("Writing File "*filename*" .... ")
 	CSV.write(wdir*"/"*filename*".csv",
@@ -39,13 +39,21 @@ function read_data(wdir::String, file_suffix::String)
 	return A, b, x_bounds
 end
 
-function run_redundancy_removal(wdir::String, file_suffix::String; filter_only::Bool=true, parallel::Bool=true)
+function run_redundancy_removal(wdir::String, file_suffix::String, input_optimizer; kwargs...)
+	set_logger(wdir)
 	A, b, x_bounds = read_data(wdir, file_suffix)
-	run_redundancy_removal(A, b, x_bounds; filter_only=filter_only, parallel=parallel)
+	essentaial_set = run_redundancy_removal(A, b, x_bounds, input_optimizer; kwargs...)
+	@info("Number of non-redundant constraints: $(length(essentaial_set))" )
+	filename = "cbco_"*file_suffix*"_"*Dates.format(now(), "ddmm_HHMM")
+	save_to_file(wdir, essentaial_set, filename)
+	@info("Everything Done!")
+	return filename
 end
 
-function run_redundancy_removal(A::Array{Float64}, b::Vector{Float64}, x_bounds::Vector{Float64};
+function run_redundancy_removal(A::Array{Float64}, b::Vector{Float64}, x_bounds::Vector{Float64}, input_optimizer;
 								filter_only::Bool=true, parallel::Bool=true, preprocessing::Bool=true)
+
+	global optimizer = input_optimizer
 
 	m = collect(1:length(b))
 	if preprocessing
@@ -76,7 +84,5 @@ function run_redundancy_removal(A::Array{Float64}, b::Vector{Float64}, x_bounds:
 		@info("Running sequential")
 		essentaial_set = main(A, b, m, I, x_bounds, z)
 	end
-	@info("Number of non-redundant constraints: $(length(essentaial_set))" )
-	save_to_file(essentaial_set, "cbco_"*file_suffix*"_"*Dates.format(now(), "ddmm_HHMM"))
-	@info("Everything Done!")
+	return essentaial_set
 end
