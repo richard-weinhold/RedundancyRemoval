@@ -96,7 +96,7 @@ end
 		dir = cd(pwd, "..")*"/examples/"
 		file_suffix = "ieee118"
 		optimizer = Clp.Optimizer
-		file = RedundancyRemoval.run_redundancy_removal(dir, file_suffix, optimizer, parallel=false)
+		file = RedundancyRemoval.run_redundancy_removal(dir, file_suffix, optimizer)
 		@test isfile(dir*file*".csv")
 	end
 end
