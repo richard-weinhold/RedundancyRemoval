@@ -4,8 +4,8 @@ import .RedundancyRemoval
 using Test, Logging
 using Plots
 using Clp
-ConsoleLogger(stdout, Logging.Error) |> global_logger#
 
+ConsoleLogger(stdout, Logging.Error) |> global_logger#
 function dummy_data()
 	A_nonredundant = [-1. 1; 	# x2 <= x1 + 3
 					  1. -1; 	# x2 >= x1 - 6
