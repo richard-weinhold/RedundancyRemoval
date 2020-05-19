@@ -1,4 +1,4 @@
-[![PomatoLogo](https://github.com/richard-weinhold/pomato/blob/master/docs/pomatologo_small.png "Pomato Soup")](#) RedundancyRemoval from POMATO - Power Market Tool
+[![PomatoLogo](https://github.com/richard-weinhold/pomato/blob/master/docs/pomatologo_small.png "Pomato Soup")](#) RedundancyRemoval for Fast Security Constraint Optimal Power Flow
 =====================================================================================================================================
 [![Build Status](https://travis-ci.org/richard-weinhold/RedundancyRemoval.svg?branch=master)](https://travis-ci.org/richard-weinhold/RedundancyRemoval)
 
