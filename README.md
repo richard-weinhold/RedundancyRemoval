@@ -1,3 +1,8 @@
+[![PomatoLogo](https://github.com/richard-weinhold/pomato/blob/master/docs/pomatologo_small.png "Pomato Soup")](#) RedundancyRemoval from POMATO - Power Market Tool
+=====================================================================================================================================
+[![Build Status](https://travis-ci.org/richard-weinhold/RedundancyRemoval.svg?branch=master)](https://travis-ci.org/richard-weinhold/RedundancyRemoval)
+
+
 Overview
 --------
 
@@ -7,13 +12,13 @@ Please see the corresponding publication for further information.
 Installation
 ------------
 
-The RedundancyRemoval algorithm can be cloned and added to you julia projects or just used from the repository. The algorithm reequires Julia 1.3 and Gurobi to function properly. Open source solvers are possible, but are struggeling in the parallel formulation. 
+The RedundancyRemoval algorithm can be cloned and added to you julia projects or just used from the repository. The algorithm reequires Julia 1.3 and works with the open Clp solver. However, espeacially with larger cases and parallel execution, Gurobi provides faster and more robust results.
 
 Example
 --------
 
 The algorithm relies on the (N-1) PTDF, the corresponding line capacities and optionally upper/lower bounds on nodal injections as inputs.
-The example folder contains these files compiled for the IEEE 118 bus network.
+The example folder contains these files compiled for the IEEE 118 bus network and the test folder uses a small example to illustrate its functionality.
 
 The algorithm can be run for the examplary data with the followig code:
 
@@ -22,7 +27,7 @@ The algorithm can be run for the examplary data with the followig code:
       file_suffix = "ieee118"
       run_redundancy_removal(wdir, file_suffix)
 
-The main function *run_redundancy_removal* can also directly take the input PTDF matrix *A*, line capacity vector *b* and the vector *x_bounds* as input.
+The main function *run_redundancy_removal* can also directly take the input PTDF matrix *A*, line capacity vector *b* and the vector *x_bounds* as input, as shown in the *test/runtests.jl*.
 
 Release Status
 --------------
