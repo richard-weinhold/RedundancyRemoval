@@ -1,28 +1,5 @@
 
-# global optimizer = optimizer_with_attributes(Gurobi.Optimizer, "OutputFlag" => 0, "Method" => 0,
-# 			   					  			 "Presolve" => 0, "PreDual" => 0, "Aggregate" => 0)
 
-# function return_optimizer()
-# 	@info("Using Clp optimizer")
-# 	return with_optimizer(Clp.Optimizer, LogLevel=0)
-# end
-
-# function set_global_optimizer(optimizer)
-# 	global optimizer = optimizer
-# end
-
-# function return_optimizer()
-# 	global optimizer
-# 	if optimizer == "gurobi"
-# 		@info("Using Gurobi optimizer")
-# 		return with_optimizer(Gurobi.Optimizer, OutputFlag=0, Method=0,
-# 							  Presolve=0, PreDual=0, Aggregate=0)
-# 	elseif optimizer == "Clp"
-# 		return with_optimizer(Clp.Optimizer, LogLevel=0)
-# 	else
-
-	# return with_optimizer(ECOS.Optimizer, VERBOSE=false)
-# end
 
 function return_optimizer()
 	global optimizer
@@ -55,7 +32,9 @@ function is_redundant(model::JuMP.Model, constraint::Vector{Float64}, rhs::Float
 	# end
 	@debug("Solution", JuMP.value.(model[:x]))
 	@debug("Obj Value", JuMP.objective_value(model))
-	@debug("Number of constraints $(num_constraints(model, GenericAffExpr{Float64,VariableRef}, MOI.LessThan{Float64}))")
+	@debug("Number of constraints $(num_constraints(model, 
+		GenericAffExpr{Float64,VariableRef},
+		MOI.LessThan{Float64}))")
 	if JuMP.termination_status(model) == MOI.OPTIMAL
 		objective_value = JuMP.objective_value(model)
 		x_opt = JuMP.value.(model[:x])
