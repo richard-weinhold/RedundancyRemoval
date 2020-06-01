@@ -1,7 +1,7 @@
 name = "RedundancyRemoval"
 uuid = "32e2fdb4-8fda-4538-bf20-57de85f2491f"
 authors = ["riw <riw@wip.tu-berlin.de>"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"

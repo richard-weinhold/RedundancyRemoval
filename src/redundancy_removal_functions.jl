@@ -5,10 +5,8 @@ function return_optimizer()
 	global optimizer
 	if string(optimizer.name) == "Gurobi.Optimizer"
 		return optimizer_with_attributes(optimizer, "OutputFlag" => 0,
-										 "Method" => 0, "Presolve" => 0,
-										 "PreDual" => 0, "Aggregate" => 0)
-	# elseif string(optimizer.name) == "Clp.Optimizer"
-	# 	return optimizer_with_attributes(optimizer, "Algorithm" => 4, "LogLevel" => 0)
+			"Method" => 0, "Presolve" => 0,
+			"PreDual" => 0, "Aggregate" => 0)
 	else
 		return optimizer
 	end
@@ -19,20 +17,9 @@ function is_redundant(model::JuMP.Model, constraint::Vector{Float64}, rhs::Float
 	tmp_constraint = @constraint(model, constraint' * model[:x] <= rhs + 1)
 	@objective(model, Max, constraint' * model[:x])
 	JuMP.optimize!(model)
-	# counter = 0
-	# while true
-	# 	JuMP.optimize!(model)
-	# 	if JuMP.termination_status(model) == MOI.OPTIMAL
-	# 		break
-	# 	elseif counter > 3
-	# 		@error("Model Infeasible! This should not be possible!")
-	# 	else
-	# 		counter += 1
-	# 	end
-	# end
 	@debug("Solution", JuMP.value.(model[:x]))
 	@debug("Obj Value", JuMP.objective_value(model))
-	@debug("Number of constraints $(num_constraints(model, 
+	@debug("Number of constraints $(num_constraints(model,
 		GenericAffExpr{Float64,VariableRef},
 		MOI.LessThan{Float64}))")
 	if JuMP.termination_status(model) == MOI.OPTIMAL
