@@ -3,6 +3,7 @@ include("../src/RedundancyRemoval.jl")
 import .RedundancyRemoval
 using Test, Logging
 using Clp
+using Plots
 
 ConsoleLogger(stdout, Logging.Error) |> global_logger#
 function dummy_data()
