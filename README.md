@@ -32,7 +32,7 @@ The main function *run_redundancy_removal* can also directly take the input PTDF
 Release Status
 --------------
 
-This algorithm finds use in the Power Market Tool [(POAMTO)](https://github.com/richard-weinhold/pomato) and is developed for this purpose. This repository exists to make the algorithm also available on its own, however the development focus lies on POMATO.
+This algorithm finds use in the Power Market Tool [(POMATO)](https://github.com/richard-weinhold/pomato) and is developed for this purpose. This repository exists to make the algorithm also available on its own, however the development focus lies on POMATO.
 
 Related Publications
 --------------------
