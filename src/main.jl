@@ -22,17 +22,17 @@ end
 function read_data(wdir::String, file_suffix::String)
 	# Read Data From CSV Files
 	@info("Reading A, b, x_bounds...")
-	A_data = CSV.read(wdir*"/A_"*file_suffix*".csv",
-					  delim=',', header=false)
-	b_data = CSV.read(wdir*"/b_"*file_suffix*".csv",
-					  delim=',', header=false, types=Dict(1=>Float64))
+	A_data = DataFrame!(CSV.File(wdir*"/A_"*file_suffix*".csv",
+					    delim=',', header=false))
+	b_data = DataFrame!(CSV.File(wdir*"/b_"*file_suffix*".csv",
+					    delim=',', header=false, types=Dict(1=>Float64)))
 
 	# Create Array A and Vector b from DataFrame
 	A =  hcat([A_data[:, i] for i in 1:size(A_data, 2)]...)
 	b = b_data[:,1]
 
-	x_bounds = CSV.read(wdir*"/x_bounds_"*file_suffix*".csv",
-					    delim=',', header=false, types=Dict(1=>Float64))
+	x_bounds = DataFrame!(CSV.File(wdir*"/x_bounds_"*file_suffix*".csv",
+					      delim=',', header=false, types=Dict(1=>Float64)))
 	# Read X Bounds or set as empty Vector
 	x_bounds = size(x_bounds, 2) > 0 ? x_bounds[:,1] : Array{Float64, 1}()
 
