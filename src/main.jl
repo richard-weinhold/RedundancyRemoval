@@ -44,7 +44,7 @@ function run_redundancy_removal(wdir::String, file_suffix::String, input_optimiz
 	A, b, x_bounds = read_data(wdir, file_suffix)
 	essentaial_set = run_redundancy_removal(A, b, x_bounds, input_optimizer; kwargs...)
 	@info("Number of non-redundant constraints: $(length(essentaial_set))" )
-	filename = "cbco_"*file_suffix*"_"*Dates.format(now(), "ddmm_HHMM")
+	filename = "cbco_"*file_suffix*"_"*Dates.format(now(), "ddmm_HHMM_SSsss")
 	save_to_file(wdir, essentaial_set, filename)
 	@info("Everything Done!")
 	return filename
