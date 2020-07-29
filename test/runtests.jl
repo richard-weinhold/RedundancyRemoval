@@ -4,6 +4,23 @@ import .RedundancyRemoval
 using Test, Logging
 using Clp
 using Plots
+using DataFrames, CSV
+
+# wdir = "C:/Users/riw/tubCloud/Uni/Market_Tool/pomato_studies/data_temp/julia_files/cbco_data"
+# RedundancyRemoval.run_redundancy_removal_fbmc_domain(wdir, Clp.Optimizer)
+# domain_data = DataFrame!(CSV.File(wdir*"/cbco_info.csv"))
+# non_redundant_domain = copy(domain_data[:, ["index", "timestep"]])
+# non_redundant_domain[!, :in_domain] .= false
+# if parallel
+# 	Threads.@threads for t in unique(domain_data[:, :timestep])
+# 		A = hcat([domain_data[domain_data[:, :timestep] .== t, i] for i in 7:size(domain_data, 2)]...)
+# 		b = domain_data[domain_data[:, :timestep] .== t, :ram]
+# 		essentaial_set = redundancy_removal_fbmc_domain(A, b, input_optimizer)
+# 		tmp = [false for i in 1:length(b)]
+# 		tmp[essentaial_set] .= true
+# 		@inbounds non_redundant_domain[!, "in_domain"][domain_data[:, :timestep] .== t] = tmp
+# 	end
+# else
 
 ConsoleLogger(stdout, Logging.Error) |> global_logger#
 function dummy_data()
@@ -54,6 +71,7 @@ function plot_redundancy_removal()
 	end
 	plt
 end
+
 
 
 @testset "All" begin
@@ -122,5 +140,10 @@ end
 		optimizer = Clp.Optimizer
 		file = RedundancyRemoval.run_redundancy_removal(dir, file_suffix, optimizer)
 		@test isfile(dir*file*".csv")
+	end
+
+	@testset "FlowBased Domain Reduction" begin
+		dir = cd(pwd, "..")*"/examples"
+		RedundancyRemoval.run_redundancy_removal_fbmc_domain(dir, Clp.Optimizer)
 	end
 end
