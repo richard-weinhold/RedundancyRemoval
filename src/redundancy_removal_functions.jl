@@ -233,7 +233,8 @@ function main_parallel_filter_lp(A::Array{Float64}, b::Vector{Float64},
 					   			 z::Vector{Float64})
 
 	filtered_m = copy(m)
-	filter_splits = Threads.nthreads()*2
+	min_splits = floor(Int, length(filtered_m)/20)
+	filter_splits = Threads.nthreads()*2 > min_splits ? min_splits : Threads.nthreads()*2
 	while true
 		tmp_m = parallel_filter(A, b, filtered_m, x_bounds, z, Int(filter_splits))
 		@info("Size of m $(length(filtered_m)) reduced to m* $(length(tmp_m))")
@@ -265,7 +266,8 @@ function main_parallel_filter(A::Array{Float64}, b::Vector{Float64},
 					   		  m::Vector{Int}, I::Vector{Int}, x_bounds::Vector{Float64},
 					   		  z::Vector{Float64})
 	filtered_m = copy(m)
-	filter_splits = Threads.nthreads()*2
+	min_splits = floor(Int, length(filtered_m)/20)
+	filter_splits = Threads.nthreads()*2 > min_splits ? min_splits : Threads.nthreads()*2
 	while true
 		tmp_m = parallel_filter(A, b, filtered_m, x_bounds, z, Int(filter_splits))
 		@info("Size of m $(length(filtered_m)) reduced to m* $(length(tmp_m))")

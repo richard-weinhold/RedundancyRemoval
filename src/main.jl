@@ -103,7 +103,6 @@ function run_redundancy_removal(A::Array{Float64}, b::Vector{Float64}, x_bounds:
 								filter_only::Bool=true, parallel::Bool=true, preprocessing::Bool=true)
 
 	set_global_optimizer(input_optimizer)
-
 	m = collect(1:length(b))
 	if preprocessing
 		@info("Preprocessing...")
