@@ -108,7 +108,7 @@ function run_redundancy_removal(A::Array{Float64}, b::Vector{Float64}, x_bounds:
 		@info("Preprocessing...")
 		@info("Removing duplicate rows...")
 		# Remove douplicates
-		condition_unique = .!nonunique(DataFrame(hcat(A,b)))
+		condition_unique = .!nonunique(DataFrame(hcat(A,b), :auto))
 		@info("Removing all zero rows...")
 		# Remove cb = co rows
 		condition_zero = vcat([!all(A[i, :] .== 0) for i in 1:length(b)])
