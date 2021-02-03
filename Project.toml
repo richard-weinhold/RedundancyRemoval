@@ -17,5 +17,5 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
 CSV = "0.8.2"
-DataFrames = "0.22.2"
+DataFrames = "0.22"
 JuMP = "0.21.6"
