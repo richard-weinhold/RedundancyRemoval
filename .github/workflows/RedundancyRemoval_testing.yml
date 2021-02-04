@@ -11,6 +11,8 @@ jobs:
       matrix:
         julia-version: ['1.5']
     steps:
+      env:
+        JULIA_NUM_THREADS: 4
     - uses: actions/checkout@v1.0.0
     - name: Set up Julia ${{ matrix.julia-version }}
       uses: julia-actions/setup-julia@v1
