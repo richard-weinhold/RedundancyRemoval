@@ -1,7 +1,6 @@
-[![PomatoLogo](https://github.com/richard-weinhold/pomato/blob/master/docs/pomatologo_small.png "Pomato Soup")](#) RedundancyRemoval for Fast Security Constraint Optimal Power Flow
+[![PomatoLogo](https://github.com/richard-weinhold/pomato/blob/master/docs/_static/graphics/pomato_logo_small.png "Pomato Soup")](#) RedundancyRemoval for Fast Security Constraint Optimal Power Flow
 =====================================================================================================================================
-[![Build Status](https://travis-ci.org/richard-weinhold/RedundancyRemoval.svg?branch=master)](https://travis-ci.org/richard-weinhold/RedundancyRemoval)
-
+![RedundancyRemoval](https://github.com/richard-weinhold/RedundancyRemoval/workflows/RedundancyRemoval/badge.svg)
 
 Overview
 --------
@@ -32,11 +31,13 @@ The main function *run_redundancy_removal* can also directly take the input PTDF
 Release Status
 --------------
 
-This algorithm finds use in the Power Market Tool [(POMATO)](https://github.com/richard-weinhold/pomato) and is developed for this purpose. This repository exists to make the algorithm also available on its own, however the development focus lies on POMATO.
+This algorithm finds use in the Power Market Tool [(POMATO)](https://github.com/richard-weinhold/pomato) and is developed for this purpose. This repository exists to make the algorithm also available on its own, however the development focus lies on its integration with POMATO.
 
 Related Publications
 --------------------
-
-- [Weinhold and Mieth (2020), Fast Security-Constrained Optimal Power Flow through
+- (*preprint*) [Weinhold and Mieth (2020), Power Market Tool (POMATO) for the Analysis of Zonal 
+   Electricity Markets](https://arxiv.org/abs/2011.11594)
+- [Weinhold and Mieth (2020), Fast Security-Constrained Optimal Power Flow through 
    Low-Impact and Redundancy Screening](https://ieeexplore.ieee.org/document/9094021)
-- [Schönheit, Weinhold, Dierstein (2020), The impact of different strategies for generation shift keys (GSKs) on the flow-based market coupling domain: A model-based analysis of Central Western Europe](https://www.sciencedirect.com/science/article/pii/S0306261919317544)
+- [Schönheit, Weinhold, Dierstein (2020), The impact of different strategies for generation 
+   shift keys (GSKs) on  the flow-based market coupling domain: A model-based analysis of Central Western Europe](https://www.sciencedirect.com/science/article/pii/S0306261919317544)
