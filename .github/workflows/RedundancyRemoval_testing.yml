@@ -1,0 +1,22 @@
+
+name: RedundancyRemoval
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        julia-version: ['1.5']
+    steps:
+    - uses: actions/checkout@v1.0.0
+    - name: Set up Julia ${{ matrix.julia-version }}
+      uses: julia-actions/setup-julia@v1
+      with:
+        version: ${{ matrix.julia-version }}
+    - name: Test Package
+      uses: julia-actions/julia-runtest@latest
+    - name: Upload coverage to Codecov
+      uses: julia-actions/julia-uploadcodecov@latest
