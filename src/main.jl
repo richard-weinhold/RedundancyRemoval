@@ -23,7 +23,6 @@ function save_to_file(wdir::String, Indices::Vector{Int}, filename::String)
 	  	 	  DataFrame(constraints = Indices.-1))
 end
 
-
 function read_data(wdir::String, file_suffix::String)
 	# Read Data From CSV Files
 	@info("Reading A, b, x_bounds...")
@@ -74,21 +73,27 @@ function run_redundancy_removal_fbmc_domain(wdir::String, input_optimizer; paral
 
 	if parallel
 		Threads.@threads for t in unique(domain_data[:, :timestep])
-			A = hcat([domain_data[domain_data[:, :timestep] .== t, i] for i in 7:size(domain_data, 2)]...)
-			b = domain_data[domain_data[:, :timestep] .== t, :ram]
-			essentaial_set = redundancy_removal_fbmc_domain(A, b, input_optimizer)
-			tmp = [false for i in 1:length(b)]
-			tmp[essentaial_set] .= true
-			@inbounds non_redundant_domain[!, "in_domain"][domain_data[:, :timestep] .== t] = tmp
+			@info("Run RedundancyRem for timestep $(t)")
+			with_logger(NullLogger()) do
+				A = hcat([domain_data[domain_data[:, :timestep] .== t, i] for i in 7:size(domain_data, 2)]...)
+				b = domain_data[domain_data[:, :timestep] .== t, :ram]
+				essentaial_set = redundancy_removal_fbmc_domain(A, b, input_optimizer)
+				tmp = [false for i in 1:length(b)]
+				tmp[essentaial_set] .= true
+				@inbounds non_redundant_domain[!, "in_domain"][domain_data[:, :timestep] .== t] = tmp
+			end
 		end
 	else
-		for t in unique(domain_data[:timestep])
-			A = hcat([domain_data[domain_data[:, :timestep] .== t, i] for i in 7:size(domain_data, 2)]...)
-			b = domain_data[domain_data[:, :timestep] .== t, :ram]
-			essentaial_set = redundancy_removal_fbmc_domain(A, b, input_optimizer)
-			tmp = [false for i in 1:length(b)]
-			tmp[essentaial_set] .= true
-			non_redundant_domain[!, "in_domain"][domain_data[:, :timestep] .== t] = tmp
+		for t in unique(domain_data[:, :timestep])
+			@info("Run RedundancyRem for timestep $(t)")
+			with_logger(NullLogger()) do
+				A = hcat([domain_data[domain_data[:, :timestep] .== t, i] for i in 7:size(domain_data, 2)]...)
+				b = domain_data[domain_data[:, :timestep] .== t, :ram]
+				essentaial_set = redundancy_removal_fbmc_domain(A, b, input_optimizer)
+				tmp = [false for i in 1:length(b)]
+				tmp[essentaial_set] .= true
+				non_redundant_domain[!, "in_domain"][domain_data[:, :timestep] .== t] = tmp
+			end
 		end
 	end
 
