@@ -11,6 +11,5 @@ makedocs(sitename="RedundancyRemoval.jl",
 
 deploydocs(
     repo = "github.com/richard-weinhold/RedundancyRemoval.git",
-    devbranch = "master",
     branch = "gh-pages"
 )
