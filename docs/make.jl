@@ -1,6 +1,6 @@
 
 using Documenter
-using MarketModel
+using RedundancyRemoval
 
 makedocs(sitename="RedundancyRemoval.jl",
     authors = "Richard Weinhold",
@@ -14,4 +14,3 @@ deploydocs(
     devbranch = "master",
     branch = "gh-pages"
 )
-

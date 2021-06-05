@@ -1,7 +1,10 @@
 
 ![POMATO SOUP](https://raw.githubusercontent.com/richard-weinhold/pomato/main/docs/_static/graphics/pomato_logo_small.png) RedundancyRemoval for Fast Security Constraint Optimal Power Flow
 =====================================================================================================================================
+
 ![RedundancyRemoval](https://github.com/richard-weinhold/RedundancyRemoval/workflows/RedundancyRemoval/badge.svg)
+
+[![codecov](https://codecov.io/gh/richard-weinhold/RedundancyRemoval/branch/master/graph/badge.svg?token=MS3er8Qjbw)](https://codecov.io/gh/richard-weinhold/RedundancyRemoval)
 
 Overview
 --------

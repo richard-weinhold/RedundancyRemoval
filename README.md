@@ -2,6 +2,8 @@
 =====================================================================================================================================
 ![RedundancyRemoval](https://github.com/richard-weinhold/RedundancyRemoval/workflows/RedundancyRemoval/badge.svg)
 
+[![codecov](https://codecov.io/gh/richard-weinhold/RedundancyRemoval/branch/master/graph/badge.svg?token=MS3er8Qjbw)](https://codecov.io/gh/richard-weinhold/RedundancyRemoval)
+
 Overview
 --------
 
