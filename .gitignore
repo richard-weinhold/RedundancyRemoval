@@ -1,0 +1,4 @@
+*local*
+.vscode/launch.json
+.vscode/settings.json
+docs/build

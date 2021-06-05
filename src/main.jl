@@ -43,6 +43,46 @@ function read_data(wdir::String, file_suffix::String)
 	return A, b, x_bounds
 end
 
+
+"""
+    run_redundancy_removal(
+        wdir::String, 
+        file_suffix::String, 
+        input_optimizer; 
+        kwargs...)
+
+    run_redundancy_removal(
+        A::Array{Float64}, 
+        b::Vector{Float64}, 
+        x_bounds::Vector{Float64}, 
+        input_optimizer;
+        filter_only::Bool=true, 
+        parallel::Bool=true,
+        preprocessing::Bool=true)
+
+
+Runs the RedundancyRemoval on files in wdir, the files that the program is looking for are A.csv,
+b.csv and x_bounds.csv with suffix or directly supply the inputs Array and Vectors. 
+
+See the examples folder for exact formatting. Generally the input matrix A represents a PTDF matrix,
+where rows represent lines/contingencies and columns nodal power injections, vector b the line
+capacity for each row in the PTDF matrix and the x_bounds vector represents the symmetrical bounds
+for nodal injections. 
+
+The resulting vector I holds indices of rows where A[:, I] x <= b[I] is a non-redundant system of 
+inequalities equivalent to the full system of inequalities.  
+
+Optional arguments can be used to influence the execution of the algorithm. The algorithm can be
+executed using multiple threads. In that case sections of the checked indices are run in parallel to
+filter out redundant indices. After each pass, sections are combined and re-run. When
+parallel=False, the algorithm will be run single threaded, meaning all indices will be checked
+sequentially in a single pass. If parallel=True, segements will be filtered and then combines. If
+filter_only=True, the last pass will be executed single threaded, if filter_only=False the method
+LPTest will be executed in paralell for all remaining indices. 
+
+The resulting essential set will be saved to the wdir. 
+
+"""
 function run_redundancy_removal(wdir::String, file_suffix::String, input_optimizer; kwargs...)
 	set_logger(wdir)
 	A, b, x_bounds = read_data(wdir, file_suffix)
@@ -54,16 +94,25 @@ function run_redundancy_removal(wdir::String, file_suffix::String, input_optimiz
 	return filename
 end
 
-function redundancy_removal_fbmc_domain(A::Array{Float64}, b::Vector{Float64}, input_optimizer)
-	set_global_optimizer(input_optimizer)
-	z = zeros(size(A, 2))
-	I = Array{Int, 1}()
-	m = collect(1:length(b))
-	x_bounds = Array{Float64, 1}()
-	return main(A, b, m, I, x_bounds, z)
-end
+"""
+	run_redundancy_removal_fbmc_domain(
+        wdir::String, 
+        input_optimizer; 
+        parallel::Bool=false)
 
-function run_redundancy_removal_fbmc_domain(wdir::String, input_optimizer; parallel::Bool=true)
+Run the RedundancyRemoval algorithm for each timedependant system of inequalities, namely zonal
+day-ahead domains for commercial exchange (FBMC Domains). This function will go through each
+timestep and presolve the system of inequalities Ax <= b, where A is the zonal PTDF, x zonal net
+positions and b the remaining capacitiy on the network elements (RAM). 
+
+See the examples folder for exact formatting of the input data (Ab_info.csv). 
+
+The optional argument parallel makes the process run in parallel, generally the default setting
+false seems to work best, as the overhead of Threading the problem outweighs its benefits since 
+the systems are of low dimensionality (< 20). 
+
+"""
+function run_redundancy_removal_fbmc_domain(wdir::String, input_optimizer; parallel::Bool=false)
 
 	set_logger(wdir)
 	domain_data = DataFrame!(CSV.File(wdir*"/Ab_info.csv"))
@@ -103,6 +152,14 @@ function run_redundancy_removal_fbmc_domain(wdir::String, input_optimizer; paral
 	@info("Everything Done!")
 end
 
+function redundancy_removal_fbmc_domain(A::Array{Float64}, b::Vector{Float64}, input_optimizer)
+	set_global_optimizer(input_optimizer)
+	z = zeros(size(A, 2))
+	I = Array{Int, 1}()
+	m = collect(1:length(b))
+	x_bounds = Array{Float64, 1}()
+	return main(A, b, m, I, x_bounds, z)
+end
 
 function run_redundancy_removal(A::Array{Float64}, b::Vector{Float64}, x_bounds::Vector{Float64}, input_optimizer;
 								filter_only::Bool=true, parallel::Bool=true, preprocessing::Bool=true)

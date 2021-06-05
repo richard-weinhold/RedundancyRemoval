@@ -1,3 +1,4 @@
+
 ![POMATO SOUP](https://raw.githubusercontent.com/richard-weinhold/pomato/main/docs/_static/graphics/pomato_logo_small.png) RedundancyRemoval for Fast Security Constraint Optimal Power Flow
 =====================================================================================================================================
 ![RedundancyRemoval](https://github.com/richard-weinhold/RedundancyRemoval/workflows/RedundancyRemoval/badge.svg)
@@ -11,7 +12,27 @@ Please see the corresponding publication for further information.
 Installation
 ------------
 
-The RedundancyRemoval algorithm can be cloned and added to you julia projects or just used from the repository. The algorithm requires Julia 1.3 and works with the open Clp solver. However, especially with larger cases and parallel execution, Gurobi provides faster and more robust results.
+This package is meant to be used in conjunction with the python
+[POMATO](https://github.com/richard-weinhold/pomato) model, which embeds its features and installs
+it automatically. 
+
+Stand alone usage is possible, however specificity formatted data. 
+
+Installation can be done directly from git via: 
+
+```
+] add https://github.com/richard-weinhold/RedundancyRemoval
+```
+
+or from a local clone/fork of the repository via: 
+
+```
+] add develop --local path-to-repository
+```
+
+The recommended julia version is 1.5, although compatibility is given for version >= 1.3, but not
+continuously tested. 
+
 
 Example
 --------
@@ -28,10 +49,16 @@ The algorithm can be run for the exemplary data with the following code:
 
 The main function *run_redundancy_removal* can also directly take the input PTDF matrix *A*, line capacity vector *b* and the vector *x_bounds* as input, as shown in the *test/runtests.jl*.
 
-Release Status
---------------
+Exposed function of the MarketModel
+-----------------------------------
 
-This algorithm finds use in the Power Market Tool [(POMATO)](https://github.com/richard-weinhold/pomato) and is developed for this purpose. This repository exists to make the algorithm also available on its own, however the development focus lies on its integration with POMATO.
+```@docs
+run_redundancy_removal
+```
+
+```@docs
+run_redundancy_removal_fbmc_domain
+```
 
 Related Publications
 --------------------
@@ -41,3 +68,5 @@ Related Publications
    Low-Impact and Redundancy Screening](https://ieeexplore.ieee.org/document/9094021)
 - [Schönheit, Weinhold, Dierstein (2020), The impact of different strategies for generation 
    shift keys (GSKs) on  the flow-based market coupling domain: A model-based analysis of Central Western Europe](https://www.sciencedirect.com/science/article/pii/S0306261919317544)
+
+

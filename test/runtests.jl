@@ -3,7 +3,7 @@ include("../src/RedundancyRemoval.jl")
 import .RedundancyRemoval
 using Test, Logging
 using Clp
-using Plots
+# using Plots
 using DataFrames, CSV
 
 # wdir = "C:/Users/riw/tubCloud/Uni/Market_Tool/pomato_studies/data_temp/julia_files/cbco_data"
@@ -49,28 +49,28 @@ function dummy_data()
 	return A, b, x_bounds, nonredundant_indices
 end
 
-function plot_redundancy_removal()
-	A, b, x_bounds, nonredundant_indices = dummy_data()
-	optimizer = Clp.Optimizer
-	essential_set = RedundancyRemoval.run_redundancy_removal(A, b, x_bounds,
-															 optimizer, parallel=false, filter_only=false)
-	f_x = x -> (-A[:, 1] .* x + b) ./ A[:, 2]
-	f_y = x -> (-A[:, 2] .* x + b) ./ A[:, 1]
-	r = -20:20
-	plot_limit = 12
-	plt = Plots.plot(xlims=(-plot_limit, plot_limit), ylims=(-plot_limit, plot_limit), legend=false)
-	y = hcat([f_x(i) for i in r]...)
-	x = hcat([f_y(i) for i in r]...)
-	for i in 1:length(b)
-		color = i in essential_set ? :red : :blue
-		if !(any(y[i, :] .== NaN) | any(y[i, :] .== Inf))
-			Plots.plot!(plt, r, y[i, :], color=color)
-		else
-			Plots.plot!(plt, x[i, :], r, color=color)
-		end
-	end
-	plt
-end
+# function plot_redundancy_removal()
+# 	A, b, x_bounds, nonredundant_indices = dummy_data()
+# 	optimizer = Clp.Optimizer
+# 	essential_set = RedundancyRemoval.run_redundancy_removal(A, b, x_bounds,
+# 															 optimizer, parallel=false, filter_only=false)
+# 	f_x = x -> (-A[:, 1] .* x + b) ./ A[:, 2]
+# 	f_y = x -> (-A[:, 2] .* x + b) ./ A[:, 1]
+# 	r = -20:20
+# 	plot_limit = 12
+# 	plt = Plots.plot(xlims=(-plot_limit, plot_limit), ylims=(-plot_limit, plot_limit), legend=false)
+# 	y = hcat([f_x(i) for i in r]...)
+# 	x = hcat([f_y(i) for i in r]...)
+# 	for i in 1:length(b)
+# 		color = i in essential_set ? :red : :blue
+# 		if !(any(y[i, :] .== NaN) | any(y[i, :] .== Inf))
+# 			Plots.plot!(plt, r, y[i, :], color=color)
+# 		else
+# 			Plots.plot!(plt, x[i, :], r, color=color)
+# 		end
+# 	end
+# 	plt
+# end
 
 
 
