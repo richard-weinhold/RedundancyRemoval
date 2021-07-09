@@ -121,15 +121,21 @@ function run_redundancy_removal_fbmc_domain(wdir::String, input_optimizer; paral
 	non_redundant_domain[!, :in_domain] .= false
 
 	if parallel
-		Threads.@threads for t in unique(domain_data[:, :timestep])
-			@info("Run RedundancyRem for timestep $(t)")
-			with_logger(NullLogger()) do
-				A = hcat([domain_data[domain_data[:, :timestep] .== t, i] for i in 7:size(domain_data, 2)]...)
-				b = domain_data[domain_data[:, :timestep] .== t, :ram]
-				essentaial_set = redundancy_removal_fbmc_domain(A, b, input_optimizer)
-				tmp = [false for i in 1:length(b)]
-				tmp[essentaial_set] .= true
-				@inbounds non_redundant_domain[!, "in_domain"][domain_data[:, :timestep] .== t] = tmp
+		timesteps = unique(domain_data[:, :timestep])
+		split_timesteps = split_m(collect(1:length(timesteps)), 4)
+		@info("Using $(4) threads for RedundancyRemoval")
+		Threads.@threads for segment in split_timesteps
+			for i in segment
+				t = timesteps[i]
+				@info("Run RedundancyRemoval for timestep $(t)")
+				with_logger(NullLogger()) do
+					A = hcat([domain_data[domain_data[:, :timestep] .== t, i] for i in 7:size(domain_data, 2)]...)
+					b = domain_data[domain_data[:, :timestep] .== t, :ram]
+					essentaial_set = redundancy_removal_fbmc_domain(A, b, input_optimizer)
+					tmp = [false for i in 1:length(b)]
+					tmp[essentaial_set] .= true
+					@inbounds non_redundant_domain[!, "in_domain"][domain_data[:, :timestep] .== t] = tmp
+				end
 			end
 		end
 	else
