@@ -13,7 +13,13 @@ Please see the corresponding publication for further information.
 Installation
 ------------
 
-The RedundancyRemoval algorithm can be cloned and added to you julia projects or just used from the repository. The algorithm requires Julia 1.3 and works with the open Clp solver. However, especially with larger cases and parallel execution, Gurobi provides faster and more robust results.
+The RedundancyRemoval algorithm can be cloned and added to you julia projects or just used from the repository. The algorithm requires Julia version >= 1.3 and works with the open Clp solver. However, especially with larger cases and parallel execution, Gurobi provides faster and more robust results.
+
+This package is meant to be used in conjunction with the python [POMATO](https://github.com/richard-weinhold/pomato) model, which embeds its features and installs
+it automatically. For stand alone usage see the documentation page or the example below:
+
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://richard-weinhold.github.io/RedundancyRemoval/dev/)
+
 
 Example
 --------
