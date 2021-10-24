@@ -122,8 +122,9 @@ function run_redundancy_removal_fbmc_domain(wdir::String, input_optimizer; paral
 
 	if parallel
 		timesteps = unique(domain_data[:, :timestep])
-		split_timesteps = split_m(collect(1:length(timesteps)), 4)
-		@info("Using $(4) threads for RedundancyRemoval")
+		threads = 4
+		split_timesteps = split_m(collect(1:length(timesteps)), threads)
+		@info("Using $(threads) threads for RedundancyRemoval")
 		Threads.@threads for segment in split_timesteps
 			for i in segment
 				t = timesteps[i]
