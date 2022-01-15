@@ -78,7 +78,7 @@ end
 	@testset "RedundancyRemoval Parallel, Filter" begin
 
 		A, b, x_bounds, nonredundant_indices = dummy_data()
-		optimizer = Clp.Optimizer
+		optimizer = Clp
 
 		essential_set = RedundancyRemoval.run_redundancy_removal(A, b, x_bounds,
 																 optimizer, parallel=true, filter_only=true)
@@ -88,7 +88,7 @@ end
 	@testset "RedundancyRemoval Parallel, Filter, witout x_bounds" begin
 
 		A, b, x_bounds, nonredundant_indices = dummy_data()
-		optimizer = Clp.Optimizer
+		optimizer = Clp
 		x_bounds = Array{Float64, 1}()
 		essential_set = RedundancyRemoval.run_redundancy_removal(A, b, x_bounds,
 																 optimizer, parallel=true, filter_only=true)
@@ -97,7 +97,7 @@ end
 
 	@testset "RedundancyRemoval Parallel, Filter=false" begin
 		A, b, x_bounds, nonredundant_indices = dummy_data()
-		optimizer = Clp.Optimizer
+		optimizer = Clp
 		essential_set = RedundancyRemoval.run_redundancy_removal(A, b, x_bounds,
 																 optimizer, parallel=true, filter_only=false)
 		@test length(setdiff(essential_set, nonredundant_indices)) == 0
@@ -105,7 +105,7 @@ end
 
 	@testset "RedundancyRemoval Singlethreaded" begin
 		A, b, x_bounds, nonredundant_indices = dummy_data()
-		optimizer = Clp.Optimizer
+		optimizer = Clp
 		essential_set = RedundancyRemoval.run_redundancy_removal(A, b, x_bounds,
 																 optimizer, parallel=false, filter_only=false)
 		@test length(setdiff(essential_set, nonredundant_indices)) == 0
@@ -137,13 +137,13 @@ end
 	@testset "Run IEEE from file" begin
 		dir = cd(pwd, "..")*"/examples/"
 		file_suffix = "ieee118"
-		optimizer = Clp.Optimizer
+		optimizer = Clp
 		file = RedundancyRemoval.run_redundancy_removal(dir, file_suffix, optimizer)
 		@test isfile(dir*file*".csv")
 	end
 
 	@testset "FlowBased Domain Reduction" begin
 		dir = cd(pwd, "..")*"/examples"
-		RedundancyRemoval.run_redundancy_removal_fbmc_domain(dir, Clp.Optimizer)
+		RedundancyRemoval.run_redundancy_removal_fbmc_domain(dir, Clp)
 	end
 end
