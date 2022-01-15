@@ -13,7 +13,8 @@ function set_logger(wdir::String)
 end
 
 function set_global_optimizer(input_optimizer)
-	global optimizer = input_optimizer
+	global optimizer = input_optimizer.Optimizer
+	global optimizer_package = input_optimizer
 end
 
 function save_to_file(wdir::String, Indices::Vector{Int}, filename::String)
@@ -48,14 +49,14 @@ end
     run_redundancy_removal(
         wdir::String, 
         file_suffix::String, 
-        input_optimizer; 
+        optimizer_package; 
         kwargs...)
 
     run_redundancy_removal(
         A::Array{Float64}, 
         b::Vector{Float64}, 
         x_bounds::Vector{Float64}, 
-        input_optimizer;
+        optimizer_package;
         filter_only::Bool=true, 
         parallel::Bool=true,
         preprocessing::Bool=true)
@@ -83,10 +84,10 @@ LPTest will be executed in paralell for all remaining indices.
 The resulting essential set will be saved to the wdir. 
 
 """
-function run_redundancy_removal(wdir::String, file_suffix::String, input_optimizer; kwargs...)
+function run_redundancy_removal(wdir::String, file_suffix::String, optimizer_package; kwargs...)
 	set_logger(wdir)
 	A, b, x_bounds = read_data(wdir, file_suffix)
-	essentaial_set = run_redundancy_removal(A, b, x_bounds, input_optimizer; kwargs...)
+	essentaial_set = run_redundancy_removal(A, b, x_bounds, optimizer_package; kwargs...)
 	@info("Number of non-redundant constraints: $(length(essentaial_set))" )
 	filename = "cbco_"*file_suffix*"_"*Dates.format(now(), "ddmm_HHMM_SSsss")
 	save_to_file(wdir, essentaial_set, filename)
@@ -97,7 +98,7 @@ end
 """
 	run_redundancy_removal_fbmc_domain(
         wdir::String, 
-        input_optimizer; 
+        optimizer_package; 
         parallel::Bool=false)
 
 Run the RedundancyRemoval algorithm for each timedependant system of inequalities, namely zonal
@@ -112,7 +113,7 @@ false seems to work best, as the overhead of Threading the problem outweighs its
 the systems are of low dimensionality (< 20). 
 
 """
-function run_redundancy_removal_fbmc_domain(wdir::String, input_optimizer; parallel::Bool=false)
+function run_redundancy_removal_fbmc_domain(wdir::String, optimizer_package; parallel::Bool=false)
 
 	set_logger(wdir)
 	domain_data = DataFrame!(CSV.File(wdir*"/Ab_info.csv"))
@@ -132,7 +133,7 @@ function run_redundancy_removal_fbmc_domain(wdir::String, input_optimizer; paral
 				with_logger(NullLogger()) do
 					A = hcat([domain_data[domain_data[:, :timestep] .== t, i] for i in 7:size(domain_data, 2)]...)
 					b = domain_data[domain_data[:, :timestep] .== t, :ram]
-					essentaial_set = redundancy_removal_fbmc_domain(A, b, input_optimizer)
+					essentaial_set = redundancy_removal_fbmc_domain(A, b, optimizer_package)
 					tmp = [false for i in 1:length(b)]
 					tmp[essentaial_set] .= true
 					@inbounds non_redundant_domain[!, "in_domain"][domain_data[:, :timestep] .== t] = tmp
@@ -145,7 +146,7 @@ function run_redundancy_removal_fbmc_domain(wdir::String, input_optimizer; paral
 			with_logger(NullLogger()) do
 				A = hcat([domain_data[domain_data[:, :timestep] .== t, i] for i in 7:size(domain_data, 2)]...)
 				b = domain_data[domain_data[:, :timestep] .== t, :ram]
-				essentaial_set = redundancy_removal_fbmc_domain(A, b, input_optimizer)
+				essentaial_set = redundancy_removal_fbmc_domain(A, b, optimizer_package)
 				tmp = [false for i in 1:length(b)]
 				tmp[essentaial_set] .= true
 				non_redundant_domain[!, "in_domain"][domain_data[:, :timestep] .== t] = tmp
@@ -159,8 +160,8 @@ function run_redundancy_removal_fbmc_domain(wdir::String, input_optimizer; paral
 	@info("Everything Done!")
 end
 
-function redundancy_removal_fbmc_domain(A::Array{Float64}, b::Vector{Float64}, input_optimizer)
-	set_global_optimizer(input_optimizer)
+function redundancy_removal_fbmc_domain(A::Array{Float64}, b::Vector{Float64}, optimizer_package)
+	set_global_optimizer(optimizer_package)
 	z = zeros(size(A, 2))
 	I = Array{Int, 1}()
 	m = collect(1:length(b))
@@ -168,10 +169,10 @@ function redundancy_removal_fbmc_domain(A::Array{Float64}, b::Vector{Float64}, i
 	return main(A, b, m, I, x_bounds, z)
 end
 
-function run_redundancy_removal(A::Array{Float64}, b::Vector{Float64}, x_bounds::Vector{Float64}, input_optimizer;
+function run_redundancy_removal(A::Array{Float64}, b::Vector{Float64}, x_bounds::Vector{Float64}, optimizer_package;
 								filter_only::Bool=true, parallel::Bool=true, preprocessing::Bool=true)
 
-	set_global_optimizer(input_optimizer)
+	set_global_optimizer(optimizer_package)
 	m = collect(1:length(b))
 	if preprocessing
 		@info("Preprocessing...")

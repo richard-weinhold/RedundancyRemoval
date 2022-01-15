@@ -3,10 +3,16 @@
 
 function return_optimizer()
 	global optimizer
-	if string(optimizer.name) == "Gurobi.Optimizer"
+	global optimizer_package
+	if string(optimizer_package) == "Gurobi"
 		return optimizer_with_attributes(optimizer, "OutputFlag" => 0,
 			"Method" => 0, "Presolve" => 0,
 			"PreDual" => 0, "Aggregate" => 0)
+	elseif string(optimizer_package) == "Clp"
+		return optimizer_with_attributes(optimizer, "LogLevel" => 0,
+		"SolveType" => 0, "PresolveType" => 1, 
+		"DualTolerance" => 1e-10, "PrimalTolerance" => 1e-10,
+		)
 	else
 		return optimizer
 	end
