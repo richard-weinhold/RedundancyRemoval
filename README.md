@@ -43,8 +43,15 @@ This algorithm finds use in the Power Market Tool [(POMATO)](https://github.com/
 
 Related Publications
 --------------------
-- (*preprint*) [Weinhold and Mieth (2020), Power Market Tool (POMATO) for the Analysis of Zonal 
-   Electricity Markets](https://arxiv.org/abs/2011.11594)
+
+- [Weinhold and Mieth (2023), Uncertainty-Aware Capacity Allocation in Flow-Based Market
+  Coupling](https://ieeexplore.ieee.org/abstract/document/10094020)
+- [Weinhold (2022), Dissertation, Open-source modeling of flow based market
+  coupling](https://depositonce.tu-berlin.de/items/d3b3a941-8c35-41b5-b404-f75034f971be) (Dissertation - Available from TU - Berlin). 
+- [Weinhold (2021), Dissertation, Open-source modeling of flow based market
+  coupling](https://depositonce.tu-berlin.de/items/d3b3a941-8c35-41b5-b404-f75034f971be) (Defence Slides). 
+- [Weinhold and Mieth (2021), Power Market Tool (POMATO) for the Analysis of Zonal 
+   Electricity Markets](https://www.sciencedirect.com/science/article/pii/S2352711021001394)
 - [Weinhold and Mieth (2020), Fast Security-Constrained Optimal Power Flow through 
    Low-Impact and Redundancy Screening](https://ieeexplore.ieee.org/document/9094021)
 - [Schönheit, Weinhold, Dierstein (2020), The impact of different strategies for generation 
