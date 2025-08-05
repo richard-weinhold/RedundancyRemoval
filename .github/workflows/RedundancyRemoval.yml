@@ -20,6 +20,8 @@ jobs:
     #   uses: julia-actions/julia-buildpkg@latest
     - name: Test Package
       uses: julia-actions/julia-runtest@latest
+      env:
+        JULIA_NUM_THREADS: 4
     - name: Upload coverage to Codecov
       uses: julia-actions/julia-uploadcodecov@latest
       with:
