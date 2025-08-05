@@ -116,7 +116,7 @@ the systems are of low dimensionality (< 20).
 function run_redundancy_removal_fbmc_domain(wdir::String, optimizer_package; parallel::Bool=false)
 
 	set_logger(wdir)
-	domain_data = DataFrame!(CSV.File(wdir*"/Ab_info.csv"))
+	domain_data = DataFrame(CSV.File(wdir*"/Ab_info.csv"))
 	non_redundant_domain = copy(domain_data[:, ["index", "timestep"]])
 	non_redundant_domain[!, :index] .+= 1
 	non_redundant_domain[!, :in_domain] .= false
